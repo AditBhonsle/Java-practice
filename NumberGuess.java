@@ -76,7 +76,6 @@ public class NumberGuess
     }
     public static void main()
     {
-        int mode;
         NumberGuess g=new NumberGuess();
         g.game();
     }

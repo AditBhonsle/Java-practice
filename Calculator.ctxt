@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=Calculator
+comment1.params=
+comment1.target=void\ display()
+comment2.params=
+comment2.target=void\ accept()
+comment3.params=
+comment3.target=void\ solve()
+comment4.params=
+comment4.target=boolean\ validOperation()
+comment5.params=
+comment5.target=void\ calculate()
+comment6.params=
+comment6.target=void\ main()
+numComments=7

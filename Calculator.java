@@ -2,7 +2,8 @@ import java.util.*;
 public class Calculator
 {
     char op;                        // Op=operation
-    int num1,num2;
+    int num1,num2,result=0;
+    ArrayList<String> history=new ArrayList<String>();
     Scanner s=new Scanner(System.in);
     void display()
     {
@@ -14,6 +15,7 @@ public class Calculator
         System.out.println("* (Multiplication)");
         System.out.println("/ (Division)");
         System.out.println("% (Remainder)");
+        System.out.println("H (History)");
         System.out.println("Q (Exit the calculator)");
     }
 
@@ -30,20 +32,47 @@ public class Calculator
         switch(op)
         {
             case '+':
-                System.out.println("Result = "+(num1+num2));
+                result=num1+num2;
+                System.out.println(num1+" + "+num2+" = "+result);
+                history.add(num1+" + "+num2+" = "+result);
                 break;
             case '-':
-                System.out.println("Result = "+(num1-num2));
+                result=num1-num2;
+                System.out.println(num1+" - "+num2+" = "+result);
+                history.add(num1+" - "+num2+" = "+result);
                 break;
             case '*':
-                System.out.println("Result = "+(num1*num2));
+                result=num1*num2;
+                System.out.println(num1+" * "+num2+" = "+result);
+                history.add(num1+" * "+num2+" = "+result);
                 break;
             case '/':
-                System.out.println("Result = "+(num1/num2));
+                result=num1/num2;
+                System.out.println(num1+" / "+num2+" = "+result);
+                history.add(num1+" / "+num2+" = "+result);
                 break;
             case '%':
-                System.out.println("Result = "+(num1%num2));
+                result=num1%num2;
+                System.out.println(num1+" % "+num2+" = "+result);
+                history.add(num1+" % "+num2+" = "+result);
                 break;
+
+        }
+    }
+
+    void viewHistory()
+    {
+        if(history.isEmpty())
+        {
+            System.out.println("No history found");
+        }
+        else
+        {
+            System.out.println("History:");
+            for(String s:history)
+            {
+                System.out.println(s);
+            }
         }
     }
 
@@ -75,7 +104,13 @@ public class Calculator
                 }
                 else
                 {
-                    accept();
+                    if(op=='h')
+                    {
+                        viewHistory();
+                    }
+                    else
+                    {
+                        accept();
                     if(num2==0 && (op=='/' || op=='%'))
                     {
                         System.out.println("Can't divide by zero");
@@ -83,7 +118,9 @@ public class Calculator
                     else
                     {
                         solve();
+                    } 
                     }
+                      
                 }
             }
         }
