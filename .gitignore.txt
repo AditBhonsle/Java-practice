@@ -1,0 +1,8 @@
+.vscode/
+*.class
+*.ctxt
+doc/
+package.bluej
+*.bluej
+*.log
+*.tmp
