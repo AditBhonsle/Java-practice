@@ -1,12 +1,72 @@
 
 import java.util.*;
 
+class historyManager {
+
+    ArrayList<String> history = new ArrayList<String>();
+
+    void log(String entry) {
+        history.add(entry);
+    }
+
+    void displayHistory() {
+        if (history.isEmpty()) {
+            System.out.println("No history found");
+            return;
+        }
+        System.out.println("History:");
+        for (String s : history) {
+            System.out.println(s);
+        }
+    }
+
+    void clearHistory() {
+        if (history.isEmpty()) {
+            System.out.println("History is already empty");
+            return;
+        }
+        history.clear();
+        System.out.println("History cleared");
+    }
+}
+
+class solver {
+
+    int result = 0;
+
+    int solve(int num1, int num2, char op) {
+        switch (op) {
+            case '+':
+                result = num1 + num2;
+                return result;
+            case '-':
+                result = num1 - num2;
+                return result;
+            case '*':
+                result = num1 * num2;
+                return result;
+            case '/':
+                result = num1 / num2;
+                return result;
+            case '%':
+                result = num1 % num2;
+                return result;
+            case '^':
+                result = (int) Math.pow(num1, num2);
+                return result;
+
+        }
+        return 0;
+    }
+}
+
 public class Calculator {
 
     char op;                        // Op=operation
     int num1, num2, result = 0;
-    ArrayList<String> history = new ArrayList<String>();
     Scanner s = new Scanner(System.in);
+    historyManager hm = new historyManager();
+    solver slv = new solver();
 
     void display() {
         System.out.println();
@@ -30,64 +90,8 @@ public class Calculator {
         num2 = s.nextInt();
     }
 
-    void solve() {
-        switch (op) {
-            case '+':
-                result = num1 + num2;
-                resultDisplay();
-                log();
-                break;
-            case '-':
-                result = num1 - num2;
-                resultDisplay();
-                log();
-                break;
-            case '*':
-                result = num1 * num2;
-                resultDisplay();
-                log();
-                break;
-            case '/':
-                result = num1 / num2;
-                resultDisplay();
-                log();
-                break;
-            case '%':
-                result = num1 % num2;
-                resultDisplay();
-                log();
-                break;
-            case '^':
-                result = (int) Math.pow(num1, num2);
-                resultDisplay();
-                log();
-                break;
-
-        }
-    }
-
-    void history() {
-        if (history.isEmpty()) {
-            System.out.println("No history found");
-            return;
-        }
-        System.out.println("History:");
-        for (String s : history) {
-            System.out.println(s);
-        }
-    }
-
-    void clearHistory() {
-        if (history.isEmpty()) {
-            System.out.println("History is already empty");
-            return;
-        }
-        history.clear();
-        System.out.println("History cleared");
-    }
-
     void log() {
-        history.add(num1 + " " + op + " " + num2 + " = " + result);
+        hm.log(num1 + " " + op + " " + num2 + " = " + result);
     }
 
     void resultDisplay() {
@@ -119,18 +123,19 @@ public class Calculator {
                     System.out.println("Thanks for using the calculator!");
                     return;
                 case 'h':
-                    history();
+                    hm.displayHistory();
                     continue;
                 case 'c':
-                    clearHistory();
+                    hm.clearHistory();
                     continue;
                 default:
                     accept();
                     if (num2 == 0 && (op == '/' || op == '%')) {
                         System.out.println("Can't divide by zero");
                     } else {
-                        solve();
-                    } 
+                        result = slv.solve(num1, num2, op);
+                        resultDisplay();
+                        log();
                     }
                     break;
             }
