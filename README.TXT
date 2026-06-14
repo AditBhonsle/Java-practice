@@ -1,11 +1,12 @@
-Git Practice Project
+Current Version: V1.8
 
-This is my first Java project using Git and GitHub.
+Features:
+- Multi-class architecture
+- History
+- Expression input
+- Tokenizer
+- Left-to-right evaluation
 
-What I learned:
-- Git init
-- Git add
-- Git commit
-- Git push
-
-Language: Java
+Known limitations:
+- No BODMAS
+- No brackets

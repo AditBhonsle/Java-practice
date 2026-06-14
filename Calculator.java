@@ -1,9 +1,9 @@
 
 import java.util.*;
 
-class historyManager {
+class HistoryManager {
 
-    ArrayList<String> history = new ArrayList<String>();
+    ArrayList<String> history = new ArrayList<>();
 
     void log(String entry) {
         history.add(entry);
@@ -30,48 +30,90 @@ class historyManager {
     }
 }
 
-class solver {
+class Solver {
 
-    int result = 0;
-
-    int solve(int num1, int num2, char op) {
-        switch (op) {
-            case '+':
-                result = num1 + num2;
-                return result;
-            case '-':
-                result = num1 - num2;
-                return result;
-            case '*':
-                result = num1 * num2;
-                return result;
-            case '/':
-                result = num1 / num2;
-                return result;
-            case '%':
-                result = num1 % num2;
-                return result;
-            case '^':
-                result = (int) Math.pow(num1, num2);
-                return result;
+    int solve(ArrayList<String> SortedInput) {
+        String current;
+        int num1, num2, result = 0;
+        ValidOp vop = new ValidOp();
+        // Implementation for solving the expression
+        for (int i = 0; i < SortedInput.size(); i++) {
+            current = SortedInput.get(i);
+            if (vop.validOperation(current.charAt(0))) {
+                if (i == 1) {
+                    num1 = Integer.parseInt(SortedInput.get(i - 1));
+                } else {
+                    num1 = result;
+                }
+                num2 = Integer.parseInt(SortedInput.get(i + 1));
+                switch (current) {
+                    case "+":
+                        result = num1 + num2;
+                        continue;
+                    case "-":
+                        result = num1 - num2;
+                        continue;
+                    case "*":
+                        result = num1 * num2;
+                        continue;
+                    case "/":
+                        if (num2 == 0) {
+                            System.out.println("Can't divide by zero");
+                            return 0;
+                        }
+                        result = num1 / num2;
+                        continue;
+                    case "%":
+                        if (num2 == 0) {
+                            System.out.println("Can't divide by zero");
+                            return 0;
+                        }
+                        result = num1 % num2;
+                        continue;
+                    case "^":
+                        result = (int) Math.pow(num1, num2);
+                }
+            }
 
         }
-        return 0;
+        return result;
+    }
+}
+
+class ValidOp {
+
+    boolean validOperation(char op) {
+        return op == '+'
+                || op == '-'
+                || op == '*'
+                || op == '/'
+                || op == '%'
+                || op == '^'
+                || op == 'h'
+                || op == 'c'
+                || op == 'q';
     }
 }
 
 public class Calculator {
+    // Op=operation
 
-    char op;                        // Op=operation
-    int num1, num2, result = 0;
+    int result = 0;
+    char current;
+    String expression = "", num = "";
+    ArrayList<String> SortedInput = new ArrayList<>();
     Scanner s = new Scanner(System.in);
-    historyManager hm = new historyManager();
-    solver slv = new solver();
+    HistoryManager hm = new HistoryManager();
+    Solver slv = new Solver();
+    ValidOp vop = new ValidOp();
 
     void display() {
         System.out.println();
         System.out.println("Welcome to Calculator");
         System.out.println("Choose any of the following operations!");
+        System.out.println("Enter expression");
+        System.out.println();
+        System.out.println("Available operations:");
         System.out.println("+ (Addition)");
         System.out.println("- (Subtraction)");
         System.out.println("* (Multiplication)");
@@ -84,41 +126,42 @@ public class Calculator {
     }
 
     void accept() {
-        System.out.println("Enter number 1");
-        num1 = s.nextInt();
-        System.out.println("Enter number 2");
-        num2 = s.nextInt();
+        expression = s.next();
+        SortedInput.clear();
+        num = "";
+
+        for (int i = 0; i < expression.length(); i++) {
+            current = expression.charAt(i);
+
+            if (Character.isDigit(current)) {
+                num += current;
+            } else if (vop.validOperation(current)) {
+                SortedInput.add(num);
+                SortedInput.add("" + current);
+                num = "";
+            }  else {
+                System.out.println("Invalid expression : " + current);
+                return;
+            }
+        }
+        if (!num.isEmpty()) {
+            SortedInput.add(num);
+        }
     }
 
     void log() {
-        hm.log(num1 + " " + op + " " + num2 + " = " + result);
+        hm.log(expression + " = " + result);
     }
 
     void resultDisplay() {
-        System.out.println(num1 + " " + op + " " + num2 + " = " + result);
-    }
-
-    boolean validOperation() {
-        return op == '+'
-                || op == '-'
-                || op == '*'
-                || op == '/'
-                || op == '%'
-                || op == '^'
-                || op == 'h'
-                || op == 'c'
-                || op == 'q';
+        System.out.println(expression + " = " + result);
     }
 
     void calculate() {
         while (true) {
             display();
-            op = s.next().toLowerCase().charAt(0);
-            if (!validOperation()) {
-                System.out.println("Invalid operation");
-                continue;
-            }
-            switch (op) {
+            accept();
+            switch (expression.toLowerCase().charAt(0)) {
                 case 'q':
                     System.out.println("Thanks for using the calculator!");
                     return;
@@ -129,15 +172,10 @@ public class Calculator {
                     hm.clearHistory();
                     continue;
                 default:
-                    accept();
-                    if (num2 == 0 && (op == '/' || op == '%')) {
-                        System.out.println("Can't divide by zero");
-                    } else {
-                        result = slv.solve(num1, num2, op);
+                        result = slv.solve(SortedInput);
                         resultDisplay();
                         log();
-                    }
-                    break;
+                        break;
             }
         }
     }
